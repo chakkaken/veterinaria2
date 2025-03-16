@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Mascota{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Detalles de la Mascota</h3>
+                <div class="btn-group">
+                    <a href="{% url 'mascota_update' mascota.pk %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{% url 'mascota_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Información General</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Nombre:</th>
+                            <td>{{ mascota.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Correo:</th>
+                            <td>{{ mascota.correo }}</td>
+                        </tr>
+                        <tr>
+                            <th>Raza:</th>
+                            <td>{{ mascota.raza }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5>Información del Dueño</h5>
+                    <table class="table">
+                        <tr>
+                            <th>Nombre:</th>
+                            <td>{{ mascota.
+                                dueño.Nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Teléfono:</th>
+                            <td>{{ mascota.dueño.Telefono }}</td>
+                        </tr>
+                        <tr>
+                            <th>Correo:</th>
+                            <td>{{ mascota.dueño.Correo }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

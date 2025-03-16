@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veterinaria</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: : background-image: url("{% static 'img/pets2.jpg' %}") /* Reemplaza con la ruta de tu imagen */
+            background-size: cover;
+            background-position: center;
+            color: #fff; /* Color del texto para que se vea sobre el fondo */
+            min-height: 100vh; /* Asegura que el fondo cubra toda la pantalla */
+            display: flex;
+            flex-direction: column; /* Alinea el contenido verticalmente */
+        }
+
+        .container {
+            max-width: 960px;
+            margin: auto;
+            padding: 20px;
+            text-align: center; /* Centra el texto */
+            flex-grow: 1; /* Permite que el contenedor crezca para ocupar el espacio disponible */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centra verticalmente el contenido dentro del contenedor */
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        a {
+            color: #4CAF50; /* Color del enlace */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Estilos para el footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bienvenido a nuestra Veterinaria</h1>
+        <p>Ofrecemos el mejor cuidado para tus mascotas.</p>
+        <p><a href="{% url 'mascotas_list' %}">Ver Mascotas</a></p>  <!-- Ejemplo de enlace a la lista de mascotas -->
+        <!-- Agrega más contenido aquí -->
+    </div>
+
+    <footer>
+        <p>Derechos reservados &copy; 2023</p>
+    </footer>
+
+</body>
+</html>

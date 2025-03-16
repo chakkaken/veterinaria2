@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Historia Clínica - {{ historia.numero_historia }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Historia Clínica #{{ historia.numero_historia }}</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Información de la Mascota</h5>
+                    <p><strong>Nombre:</strong> {{ historia.mascota.nombre }}</p>
+                    <p><strong>Dueño:</strong> {{ historia.mascota.dueno }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Información de la Consulta</h5>
+                    <p><strong>Doctor:</strong> {{ historia.doctor.Nombre }}</p>
+                    <p><strong>Fecha:</strong> {{ historia.Fecha|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h5>Descripción</h5>
+                    <p>{{ historia.Descripcion }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'historia_list' %}" class="btn btn-secondary">Volver</a>
+            <a href="{% url 'historia_update' historia.pk %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'historia_delete' historia.pk %}" class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

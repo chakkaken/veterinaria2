@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Editar Dueño{% else %}Nuevo Dueño{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if form.instance.pk %}Editar Dueño{% else %}Nuevo Dueño{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.Nombre.label_tag }}
+            {{ form.Nombre }}
+            {% if form.Nombre.errors %}
+                <div class="text-danger">{{ form.Nombre.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.Apellido.label_tag }}
+            {{ form.Apellido }}
+            {% if form.Apellido.errors %}
+                <div class="text-danger">{{ form.Apellido.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.Edad.label_tag }}
+            {{ form.Edad }}
+            {% if form.Edad.errors %}
+                <div class="text-danger">{{ form.Edad.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.Correo.label_tag }}
+            {{ form.Correo }}
+            {% if form.Correo.errors %}
+                <div class="text-danger">{{ form.Correo.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.Telefono.label_tag }}
+            {{ form.Telefono }}
+            {% if form.Telefono.errors %}
+                <div class="text-danger">{{ form.Telefono.errors }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Guardar Cambios{% else %}Crear Dueño{% endif %}
+        </button>
+        <a href="{% url 'duenos_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

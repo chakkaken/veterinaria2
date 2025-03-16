@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Veterinaria{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Encabezado -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Dashboard</h1>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#quickAddModal">
+                <i class="fas fa-plus"></i> Registro Rápido
+            </button>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Estadísticas -->
+    <div class="row">
+        <!-- Mascotas -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Mascotas</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_mascotas }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-paw fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dueños -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Dueños</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_duenos }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctores -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Total Doctores</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_doctores }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-md fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historias Clínicas -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Historias</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_historias }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="row">
+        <!-- Historias Clínicas Recientes -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Historias Clínicas Recientes</h6>
+                    <a href="{% url 'historia_list' %}" class="btn btn-sm btn-primary">
+                        Ver Todas
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Mascota</th>
+                                    <th>Doctor</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for historia in historias_list %}
+                                <tr>
+                                    <td>{{ historia.Fecha|date:"d/m/Y" }}</td>
+                                    <td>{{ historia.mascota }}</td>
+                                    <td>{{ historia.Doctor }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No hay historias clínicas registradas</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctores Disponibles -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Doctores Disponibles</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for doctor in doctores %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ doctor.Nombre }} {{ doctor.Apellido }}</h6>
+                                <small>{{ doctor.Especialidad }}</small>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="list-group-item">No hay doctores registrados</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Tabla de Razas -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Razas Registradas</h6>
+            <a href="{% url 'razas_create' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Nueva Raza
+            </a>
+        </div>
+        <h6 class="m-0 font-weight-bold text-primary">Razas Registradas</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nombre de la Raza</th>
+                        <th>Cantidad de Mascotas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for raza in razas %}
+                    <tr>
+                        <td>{{ raza.nombre }}</td>
+                        <td>{{ raza.mascota_set.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Registro Rápido -->
+<div class="modal fade" id="quickAddModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registro Rápido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'mascotas_create' %}" class="btn btn-primary">
+                        <i class="fas fa-paw"></i> Nueva Mascota
+                    </a>
+                    <a href="{% url 'duenos_list' %}" class="btn btn-success">
+                        <i class="fas fa-user"></i> Nuevo Dueño
+                    </a>
+                    <a href="{% url 'historia_list' %}" class="btn btn-info">
+                        <i class="fas fa-clipboard"></i> Nueva Historia Clínica
+                    </a>
+                    <a href="{% url 'doctores_create' %}" class="btn btn-success">
+                        <i class="fas fa-user"></i> Nuevo Doctor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .border-left-primary {
+        border-left: .25rem solid #4e73df!important;
+    }
+    .border-left-success {
+        border-left: .25rem solid #1cc88a!important;
+    }
+    .border-left-info {
+        border-left: .25rem solid #36b9cc!important;
+    }
+    .border-left-warning {
+        border-left: .25rem solid #f6c23e!important;
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #e3e6f0;
+        border-radius: .35rem;
+    }
+    
+</style>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Lista de Razas  <!-- Título de la página (pestaña del navegador) -->
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Lista de Mascotas</h2>
+        <a href="{% url 'razas_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva raza
+        </a>
+    </div>
+    <div class="row">
+    {% for raza in razas %}
+    <div class="col-md-5 mb-4">
+        <div class="card h-100">
+            {% if raza.imagen %}
+                <img src="{{ raza.imagen.url }}" class="card-img-top" alt="{{ raza.nombre }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-dog fa-3x text-muted"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ raza.nombre }}</h5>
+                <div class="btn-group">
+                    <a href="{% url 'razas_form' raza.pk %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{% url 'razas_delete' raza.pk %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                    <a href="{% url 'dashboard'  %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-warning"></i> principal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            No hay razas disponibles.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!-- Paginación -->
+{% if is_paginated %}
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="Primera">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
