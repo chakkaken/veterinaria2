@@ -7,6 +7,6 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
    
-    path('', include('Componentes.Urls')),  # Incluye las URLs de tu aplicación
+    path('', include('vet3.Componentes.Urls')),  # Incluye las URLs de tu aplicación
      
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

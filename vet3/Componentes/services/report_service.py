@@ -8,7 +8,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
-from Componentes.models import Citas, Mascotas, Duenos, Doctores, Historias, Raza
+from ..models import Citas, Mascotas, Duenos, Doctores, Historias, Raza
 
 
 class ReportService:
