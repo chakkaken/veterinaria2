@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Usuario{% endblock %}
+
+{% block page_title %}Eliminar Usuario{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1><i class="fa-solid fa-user-xmark"></i> Eliminar Usuario</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Dashboard</a> <span>/</span>
+            <a href="{% url 'usuario_list' %}">Usuarios</a> <span>/</span>
+            Eliminar
+        </div>
+    </div>
+</div>
+
+<div class="confirm-box">
+    <div class="confirm-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <h3>¿Estás seguro?</h3>
+    <p>Estás a punto de eliminar al usuario <strong>{{ object.username }}</strong>. Esta acción no se puede deshacer.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-trash"></i> Sí, eliminar
+            </button>
+            <a href="{% url 'usuario_list' %}" class="btn btn-ghost">
+                <i class="fa-solid fa-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

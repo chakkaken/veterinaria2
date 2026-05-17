@@ -1,131 +1,68 @@
 {% extends 'base.html' %}
-
-{% block title %}
-    {% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Historia Clínica
-{% endblock %}
+{% block title %}{% if form.instance.pk %}Editar Historia{% else %}Nueva Historia Clínica{% endif %}{% endblock %}
+{% block page_title %}{% if form.instance.pk %}Editar Historia{% else %}Nueva Historia{% endif %}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">
-                        {% if form.instance.pk %}
-                            Editar Historia Clínica
-                        {% else %}
-                            Nueva Historia Clínica
-                        {% endif %}
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
-
-                        {% if form.errors %}
-                        <div class="alert alert-danger">
-                            <strong>Por favor, corrige los siguientes errores:</strong>
-                            {{ form.errors }}
-                        </div>
-                        {% endif %}
-
-                        <!-- Número de Historia -->
-                        {{ form.doctor.label_tag }} 
-                        <div class="mb-3">
-                            <label for="{{ form.numero_historia.id_for_label }}" class="form-label">Número de Historia</label>
-                            {{ form.numero_historia }}
-                            {% if form.numero_historia.errors %}
-                            <div class="text-danger">
-                                {{ form.numero_historia.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Mascota -->
-                        <div class="mb-3">
-                            <label for="{{ form.mascota.id_for_label }}" class="form-label">Mascota</label>
-                            {{ form.mascota }}
-                            {% if form.mascota.errors %}
-                            <div class="text-danger">
-                                {{ form.mascota.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Doctor -->
-                        <div class="mb-3">
-                            <label for="{{ form.doctor.id_for_label }}" class="form-label">Doctor</label>
-                            {{ form.doctor }}
-                            {% if form.doctor.errors %}
-                            <div class="text-danger">
-                                {{ form.doctor.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Descripción -->
-                        <div class="mb-3">
-                            <label for="{{ form.Descripcion.id_for_label }}" class="form-label">Descripción</label>
-                            {{ form.Descripcion }}
-                            {% if form.Descripcion.errors %}
-                            <div class="text-danger">
-                                {{ form.Descripcion.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Botones -->
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="{% url 'historia_list' %}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> 
-                                {% if form.instance.pk %}
-                                    Actualizar
-                                {% else %}
-                                    Guardar
-                                {% endif %}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="page-header">
+    <div>
+        <h1>📋 {% if form.instance.pk %}Editar Historia{% else %}Nueva Historia Clínica{% endif %}</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'historia_list' %}">Historias</a>
+            <span>/</span>
+            {% if form.instance.pk %}Editar{% else %}Crear{% endif %}
         </div>
     </div>
 </div>
 
-<style>
-.card {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
+<div style="max-width:680px;">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-file-medical" style="color:#ffd93d;margin-right:8px;"></i>Datos de la Historia Clínica</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
 
-.form-control:focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label">N° de Historia</label>
+                        {{ form.numero_historia }}
+                        {% if form.numero_historia.errors %}<ul class="errorlist">{% for e in form.numero_historia.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                </div>
 
-.btn {
-    transition: all 0.3s ease;
-}
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label">Mascota</label>
+                        {{ form.mascota }}
+                        {% if form.mascota.errors %}<ul class="errorlist">{% for e in form.mascota.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Doctor</label>
+                        {{ form.doctor }}
+                        {% if form.doctor.errors %}<ul class="errorlist">{% for e in form.doctor.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                </div>
 
-.btn:hover {
-    transform: translateY(-1px);
-}
+                <div class="form-group">
+                    <label class="form-label">Descripción / Diagnóstico</label>
+                    {{ form.Descripcion }}
+                    {% if form.Descripcion.errors %}<ul class="errorlist">{% for e in form.Descripcion.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
 
-textarea.form-control {
-    min-height: 150px;
-}
-</style>
-
-<script>
-$(document).ready(function() {
-    // Inicializar Select2 para los campos de selección
-    $('#{{ form.mascota.id_for_label }}, #{{ form.doctor.id_for_label }}').select2({
-        theme: 'bootstrap4',
-        width: '100%',
-        placeholder: 'Seleccione una opción'
-    });
-});
-</script>
+                <div style="display:flex;gap:12px;margin-top:8px;">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        {% if form.instance.pk %}Guardar cambios{% else %}Registrar Historia{% endif %}
+                    </button>
+                    <a href="{% url 'historia_list' %}" class="btn btn-ghost">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

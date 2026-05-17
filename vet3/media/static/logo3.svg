@@ -1,0 +1,18 @@
+<svg width="200" height="220" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+  <!-- Forma de escudo asimétrico -->
+  <path d="M40 30 L160 30 L160 110 C160 160 100 200 100 200 C100 200 40 160 40 110 Z" fill="#191970" stroke="#FFD700" stroke-width="3"/>
+  
+  <!-- K estilizada -->
+  <path d="M70 70 L70 150 M70 110 L100 70 M70 110 L100 150" stroke="white" stroke-width="10" fill="none" stroke-linecap="round"/>
+  
+  <!-- M estilizada conectada a K -->
+  <path d="M110 150 L110 70 L130 110 L150 70 L150 150" stroke="#FFD700" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Efecto sello/textura -->
+  <circle cx="100" cy="40" r="2" fill="#FFD700" opacity="0.5"/>
+  <circle cx="90" cy="38" r="1.5" fill="#FFD700" opacity="0.3"/>
+  <circle cx="110" cy="38" r="1.5" fill="#FFD700" opacity="0.3"/>
+  
+  <!-- Línea de firma base -->
+  <path d="M60 165 Q100 175 140 165" stroke="#FFD700" stroke-width="2" fill="none" opacity="0.6"/>
+</svg>

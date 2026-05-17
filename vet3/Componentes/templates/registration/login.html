@@ -1,65 +1,271 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | VetSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f1117;
+            color: #e8eaf0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-{% block title %}Iniciar Sesión{% endblock %}
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 20%, rgba(108,99,255,.18) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 80% 80%, rgba(78,205,196,.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
 
-{% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card mt-5">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-user-lock"></i> Iniciar Sesión
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: #1a1d27;
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 16px;
+            padding: 40px;
+            position: relative;
+            animation: fadeUp .5s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(20px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
 
-                    <form method="post">
-                        {% csrf_token %}
-                        {% if form.errors %}
-                            <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-circle"></i>
-                                Usuario o contraseña incorrectos
-                            </div>
-                        {% endif %}
-                        
-                        <div class="mb-3">
-                            <label for="id_username" class="form-label">Usuario</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fas fa-user"></i>
-                                </span>
-                                <input type="text" name="username" class="form-control" id="id_username" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="id_password" class="form-label">Contraseña</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                                <input type="password" name="password" class="form-control" id="id_password" required>
-                            </div>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-                            </button>
-                        </div>
-                    </form>
+        .login-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-logo .icon {
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, #6c63ff, #4ecdc4);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 14px;
+        }
+        .login-logo h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.3px; }
+        .login-logo p { font-size: .85rem; color: #7b8099; margin-top: 4px; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-label {
+            display: block;
+            font-size: .78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: #7b8099;
+            margin-bottom: 7px;
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap i {
+            position: absolute;
+            left: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: #7b8099;
+            font-size: .9rem;
+            pointer-events: none;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #7b8099;
+            font-size: .9rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            transition: all .2s;
+        }
+        .toggle-password:hover {
+            color: #6c63ff;
+        }
+        .form-control {
+            width: 100%;
+            padding: 11px 14px 11px 38px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 8px;
+            color: #e8eaf0;
+            font-size: .9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all .2s;
+        }
+        .form-control.password-input {
+            padding-right: 44px;
+        }
+        .form-control:focus {
+            border-color: #6c63ff;
+            background: rgba(108,99,255,.07);
+            box-shadow: 0 0 0 3px rgba(108,99,255,.15);
+        }
+        .form-control::placeholder { color: #7b8099; }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6c63ff, #8b82ff);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: .95rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all .2s;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-login:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-login:active { transform: translateY(0); }
+
+        .error-msg {
+            background: rgba(255,107,107,.1);
+            border: 1px solid rgba(255,107,107,.25);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: .83rem;
+            color: #ff6b6b;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: .78rem;
+            color: #7b8099;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #e8eaf0;
+            font-size: .85rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all .2s;
+            border: 1px solid rgba(255,255,255,.1);
+            background: #1a1d27;
+            cursor: pointer;
+        }
+        .btn-back:hover {
+            color: #fff;
+            border-color: #ff4d6d;
+            background: rgba(255,77,109,.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-logo">
+            <div class="icon">🐾</div>
+            <h1>VetSystem</h1>
+            <p>Sistema de Gestión Veterinaria</p>
+        </div>
+
+        {% if form.errors %}
+        <div class="error-msg">
+            <i class="fa-solid fa-circle-xmark"></i>
+            Usuario o contraseña incorrectos. Intenta de nuevo.
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="id_username">Usuario</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="username" id="id_username"
+                           class="form-control" placeholder="Tu nombre de usuario"
+                           autofocus autocomplete="username" required>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="form-label" for="id_password">Contraseña</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" id="id_password"
+                           class="form-control password-input" placeholder="Tu contraseña"
+                           autocomplete="current-password" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <button type="submit" class="btn-login">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div style="text-align:center; margin-top:16px;">
+            <a href="{% url 'dashboard' %}" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+            </a>
+        </div>
+
+        <div class="login-footer">
+            © 2025 VetSystem · Todos los derechos reservados
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script>
+        const toggleButton = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('id_password');
+        const toggleIcon = toggleButton.querySelector('i');
+
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
+</body>
+</html>

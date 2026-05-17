@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Cita{% endblock %}
+{% block page_title %}Eliminar Cita{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>⚠️ Eliminar Cita</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'citas_list' %}">Citas</a>
+            <span>/</span> Eliminar
+        </div>
+    </div>
+</div>
+
+<div style="max-width:500px; margin: 40px auto;">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color:#dc3545;margin-right:8px;"></i>Confirmación de Eliminación</h3>
+        </div>
+        <div class="card-body">
+            <div style="padding: 16px; background: rgba(255,107,107,.1); border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--accent-3);">
+                <p style="margin: 0; color: var(--accent-3);">
+                    <strong>⚠️ Advertencia:</strong> Está a punto de eliminar una cita agendada. Esta acción no se puede deshacer.
+                </p>
+            </div>
+
+            <div style="padding: 16px; background: rgba(255,255,255,.04); border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border);">
+                <p style="margin-bottom:6px;"><strong style="color:var(--text-muted);">Mascota:</strong> <span style="color:var(--accent);">{{ object.mascota.nombre }}</span></p>
+                <p style="margin-bottom:6px;"><strong style="color:var(--text-muted);">Dueño:</strong> {{ object.dueno.Nombre }} {{ object.dueno.Apellido }}</p>
+                <p style="margin-bottom:6px;"><strong style="color:var(--text-muted);">Doctor:</strong> {{ object.doctor.Nombre }} {{ object.doctor.Apellido }}</p>
+                <p style="margin-bottom:6px;"><strong style="color:var(--text-muted);">Fecha de la Cita:</strong> {{ object.fecha_cita|date:"d/m/Y H:i" }}</p>
+                <p style="margin-bottom:0;"><strong style="color:var(--text-muted);">Motivo:</strong> {{ object.motivo }}</p>
+            </div>
+
+            <p style="color: var(--text-muted); margin-bottom: 20px;">¿Desea continuar con la eliminación de esta cita?</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div style="display:flex; gap:12px;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash"></i> Sí, Eliminar Cita
+                    </button>
+                    <a href="{% url 'citas_list' %}" class="btn btn-ghost">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

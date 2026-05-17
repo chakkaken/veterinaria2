@@ -1,63 +1,52 @@
 {% extends 'base.html' %}
-
-{% block title %}
-    {% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Raza
-{% endblock %}
+{% block title %}Nueva Raza{% endblock %}
+{% block page_title %}Nueva Raza{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">{% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Raza</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.Nombre.id_for_label }}" class="form-label">Nombre</label>
-                            {{ form.nombre }}
-                            {% if form.Nombre.errors %}
-                            <div class="alert alert-danger mt-1">
-                                {{ form.nombre.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+<div class="page-header">
+    <div>
+        <h1>🐕 Nueva Raza</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'razas_list' %}">Razas</a>
+            <span>/</span> Crear
+        </div>
+    </div>
+</div>
 
-                        <div class="mb-3">
-                            <label for="{{ form.imagen.id_for_label }}" class="form-label">Imagen</label>
-                            {% if form.instance.imagen %}
-                                <div class="mb-2">
-                                    <img src="{{ form.instance.imagen.url }}" alt="Imagen actual" class="img-thumbnail" style="max-height: 50px;">
-                                </div>
-                            {% endif %}
-                            <div class="input-group">
-                                {{ form.imagen }}
-                            </div>
-                            {% if form.imagen.errors %}
-                            <div class="alert alert-danger mt-1">
-                                {{ form.imagen.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+<div style="max-width:480px;">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-dog" style="color:#a29bfe;margin-right:8px;"></i>Datos de la Raza</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
 
-                        <div class="text-end mt-4">
-                            <a href="{% url 'razas_list' %}" class="btn btn-secondary me-2">
-                                <i class="fas fa-times"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> 
-                                {% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %}
-                            </button>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label class="form-label">Nombre de la Raza</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}<ul class="errorlist">{% for e in form.nombre.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label class="form-label">Imagen (opcional)</label>
+                    {{ form.imagen }}
+                    {% if form.imagen.errors %}<ul class="errorlist">{% for e in form.imagen.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    <div style="font-size:.75rem;color:#7b8099;margin-top:5px;">Formatos: JPG, PNG, WEBP</div>
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:8px;">
+                    <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg,#a29bfe,#6c63ff);">
+                        <i class="fa-solid fa-floppy-disk"></i> Registrar Raza
+                    </button>
+                    <a href="{% url 'razas_list' %}" class="btn btn-ghost">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 {% endblock %}
-
-<style>

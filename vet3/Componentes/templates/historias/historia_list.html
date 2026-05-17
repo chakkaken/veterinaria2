@@ -1,32 +1,68 @@
 {% extends 'base.html' %}
-
 {% block title %}Historias Clínicas{% endblock %}
+{% block page_title %}Historias Clínicas{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Historias Clínicas</h2>
-        <a href="{% url 'historia_form' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nueva Historia
-        </a>
+<div class="page-header">
+    <div>
+        <h1>📋 Historias Clínicas</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span> Historias Clínicas
+        </div>
     </div>
+    <a href="{% url 'historia_form' %}" class="btn btn-warning">
+        <i class="fa-solid fa-plus"></i> Nueva Historia
+    </a>
+</div>
 
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="card" style="margin-bottom: 20px;">
+    <div class="card-header">
+        <h3><i class="fa-solid fa-search"></i> Buscar Historia</h3>
     </div>
-    {% endfor %}
-    {% endif %}
+    <div class="card-body">
+        <form method="GET" action="{% url 'historia_list' %}" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+            <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                <label class="form-label" for="campo_busqueda">Buscar por</label>
+                <select name="campo_busqueda" id="campo_busqueda" class="form-control">
+                    <option value="numero_historia" {% if campo_busqueda == 'numero_historia' %}selected{% endif %}>N° Historia</option>
+                    <option value="doctor" {% if campo_busqueda == 'doctor' %}selected{% endif %}>Doctor</option>
+                    <option value="mascota" {% if campo_busqueda == 'mascota' %}selected{% endif %}>Mascota</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 250px;">
+                <label class="form-label" for="termino">Término de búsqueda</label>
+                <input type="text" name="termino" id="termino" class="form-control" placeholder="Ingrese el término..." value="{{ termino }}">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-search"></i> Buscar
+            </button>
+            {% if termino %}
+            <a href="{% url 'historia_list' %}" class="btn btn-ghost">
+                <i class="fa-solid fa-times"></i> Limpiar
+            </a>
+            {% endif %}
+        </form>
+    </div>
+</div>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
+{% if termino %}
+<div style="margin-bottom: 16px; padding: 12px 16px; background: rgba(108,99,255,.1); border: 1px solid rgba(108,99,255,.3); border-radius: 8px; display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-search" style="color: #6c63ff;"></i>
+    <span>Resultados para: <strong>"{{ termino }}"</strong> en <strong>{{ campo_busqueda|title }}</strong></span>
+    <span style="margin-left: auto; color: #7b8099;">{{ historias.count }} resultado(s)</span>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="table-wrap">
+        <table>
             <thead>
                 <tr>
-                    <th>Número</th>
+                    <th>N° Historia</th>
                     <th>Mascota</th>
                     <th>Doctor</th>
+                    <th>Descripción</th>
                     <th>Fecha</th>
                     <th>Acciones</th>
                 </tr>
@@ -34,69 +70,61 @@
             <tbody>
                 {% for historia in historias %}
                 <tr>
-                    <td>{{ historia.numero_historia }}</td>
-                    <td>{{ historia.mascota }}</td>
-                    <td>{{ historia.doctor.Nombre }}</td>
-                    <td>{{ historia.Fecha|date:"d/m/Y" }}</td>
+                    <td><span class="badge badge-yellow">{{ historia.numero_historia }}</span></td>
                     <td>
-                        <div class="btn-group" role="group">
-                            <a href="{% url 'historia_detail' historia.pk %}" class="btn btn-info btn-sm">
-                                <i class="fas fa-eye"></i>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#ffd93d,#e6c234);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#1a1d27;">
+                                {{ historia.mascota.nombre|first|upper }}
+                            </div>
+                            {{ historia.mascota.nombre }}
+                        </div>
+                    </td>
+                    <td style="font-size:.85rem;">Dr. {{ historia.doctor.Nombre }} {{ historia.doctor.Apellido }}</td>
+                    <td style="max-width:240px;color:#7b8099;font-size:.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        {{ historia.Descripcion }}
+                    </td>
+                    <td style="color:#7b8099;font-size:.83rem;white-space:nowrap;">{{ historia.Fecha|date:"d/m/Y" }}</td>
+                    <td>
+                        <div class="actions-group">
+                            <a href="{% url 'historia_detail' historia.pk %}" class="action-btn action-view" title="Ver detalle">
+                                <i class="fa-solid fa-eye"></i>
                             </a>
-                            <a href="{% url 'historia_update' historia.pk %}" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit"></i>
+                            <a href="{% url 'historia_update' historia.pk %}" class="action-btn action-edit" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="{% url 'historia_delete' historia.pk %}" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i>
+                            <a href="{% url 'historia_delete' historia.pk %}" class="action-btn action-delete" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
                             </a>
                         </div>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No hay historias clínicas registradas.</td>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-file-medical"></i>
+                            <p>No hay historias clínicas registradas.</p>
+                            <a href="{% url 'historia_form' %}" class="btn btn-warning" style="margin-top:12px;">Crear primera historia</a>
+                        </div>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-</div>
-{% if is_paginated %}
-    <nav aria-label="Paginación">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Primera">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
 
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1{% if campo_busqueda %}&campo_busqueda={{ campo_busqueda }}{% endif %}{% if termino %}&termino={{ termino }}{% endif %}" class="page-btn"><i class="fa-solid fa-angles-left"></i></a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if campo_busqueda %}&campo_busqueda={{ campo_busqueda }}{% endif %}{% if termino %}&termino={{ termino }}{% endif %}" class="page-btn"><i class="fa-solid fa-angle-left"></i></a>
+        {% endif %}
+        <span class="page-info">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if campo_busqueda %}&campo_busqueda={{ campo_busqueda }}{% endif %}{% if termino %}&termino={{ termino }}{% endif %}" class="page-btn"><i class="fa-solid fa-angle-right"></i></a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if campo_busqueda %}&campo_busqueda={{ campo_busqueda }}{% endif %}{% if termino %}&termino={{ termino }}{% endif %}" class="page-btn"><i class="fa-solid fa-angles-right"></i></a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

@@ -1,41 +1,39 @@
 {% extends 'base.html' %}
-
 {% block title %}Eliminar Mascota{% endblock %}
+{% block page_title %}Eliminar Mascota{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header bg-danger text-white">
-                    <h3 class="mb-0">Confirmar Eliminación</h3>
-                </div>
-                <div class="card-body">
-                    <p class="lead">¿Está seguro que desea eliminar la mascota "{{ object.nombre }}"?</p>
-                    
-                    <div class="alert alert-warning">
-                        <h5>Detalles de la mascota:</h5>
-                        <ul class="mb-0">
-                            <li><strong>Nombre:</strong> {{ object.nombre }}</li>
-                            <li><strong>Dueño:</strong> {{ object.dueño }}</li>
-                            <li><strong>Raza:</strong> {{ object.raza }}</li>
-                        </ul>
-                    </div>
-
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="text-end">
-                            <a href="{% url 'mascotas_list' %}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash"></i> Confirmar Eliminación
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div class="page-header">
+    <div>
+        <h1>Eliminar Mascota</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'mascotas_list' %}">Mascotas</a>
+            <span>/</span> Eliminar
         </div>
+    </div>
+</div>
+
+<div style="max-width:480px; margin:40px auto 0;">
+    <div class="confirm-box">
+        <div class="confirm-icon">🗑️</div>
+        <h3>¿Eliminar esta mascota?</h3>
+        <p>
+            Estás a punto de eliminar a <strong style="color:#e8eaf0;">{{ object.nombre }}</strong>.<br>
+            Esta acción <strong style="color:#ff6b6b;">no se puede deshacer</strong>.
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="btn-group">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i> Sí, eliminar
+                </button>
+                <a href="{% url 'mascotas_list' %}" class="btn btn-ghost">
+                    <i class="fa-solid fa-arrow-left"></i> Cancelar
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

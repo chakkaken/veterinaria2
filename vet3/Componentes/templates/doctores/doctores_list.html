@@ -1,103 +1,86 @@
 {% extends 'base.html' %}
-
-{% block title %}Lista de Doctores{% endblock %}
+{% block title %}Doctores{% endblock %}
+{% block page_title %}Doctores{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <h2>Lista de Doctores</h2>
-        <a href="{% url 'doctores_create' %}" class="btn btn-primary">
-            <i class="fas fa-user-md"></i> Nuevo Doctor
-        </a>
+<div class="page-header">
+    <div>
+        <h1>🩺 Doctores</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span> Doctores
+            <span>·</span> <span style="color:#ff6b6b;">{{ total_doctores }} registrados</span>
+        </div>
     </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <div class="row">
-        {% for doctor in doctores %}
-            <div class="col-md-6 mb-6">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-user-md"></i> 
-                            {{ doctor.Nombre }} {{ doctor.Apellido }}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">
-                            <strong>ID:</strong> {{ doctor.pk }}
-                        </p>
-                        <p class="card-text">
-                            <strong>Especialidad:</strong> {{ doctor.Especialidad }}
-                        </p>
-                        <div class="btn-group w-100">
-                            <a href="{% url 'doctores_update' doctor.pk %}" class="btn btn-warning">
-                                <i class="fas fa-edit"></i> Editar
-                            </a>
-                            <a href="{% url 'doctores_delete' doctor.pk %}" class="btn btn-danger">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </a>
-                            {% if doctor.dueno %}
-                                <a href="{% url 'duenos_update' doctor.dueno.pk %}" class="btn btn-info">
-                                    <i class="fas fa-edit"></i> Editar Dueño
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No hay doctores registrados.
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    <a href="{% url 'doctores_create' %}" class="btn btn-danger">
+        <i class="fa-solid fa-plus"></i> Nuevo Doctor
+    </a>
 </div>
-{% if is_paginated %}
-    <nav aria-label="Paginación">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Primera">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
 
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Doctor</th>
+                    <th>Especialidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctores %}
+                <tr>
+                    <td style="color:#7b8099;font-size:.8rem;">{{ forloop.counter }}</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#ff6b6b,#e05252);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;">
+                                {{ doctor.Nombre|first|upper }}{{ doctor.Apellido|first|upper }}
+                            </div>
+                            <div>
+                                <div style="font-weight:600;">Dr. {{ doctor.Nombre }} {{ doctor.Apellido }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-red">{{ doctor.Especialidad }}</span></td>
+                    <td>
+                        <div class="actions-group">
+                            <a href="{% url 'doctores_update' doctor.pk %}" class="action-btn action-edit" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <a href="{% url 'doctores_delete' doctor.pk %}" class="action-btn action-delete" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-user-doctor"></i>
+                            <p>No hay doctores registrados.</p>
+                            <a href="{% url 'doctores_create' %}" class="btn btn-danger" style="margin-top:12px;">Registrar primer doctor</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="page-btn"><i class="fa-solid fa-angles-left"></i></a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-btn"><i class="fa-solid fa-angle-left"></i></a>
+        {% endif %}
+        <span class="page-info">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-btn"><i class="fa-solid fa-angle-right"></i></a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn"><i class="fa-solid fa-angles-right"></i></a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

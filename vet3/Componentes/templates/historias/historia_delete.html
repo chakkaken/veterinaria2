@@ -1,30 +1,29 @@
 {% extends 'base.html' %}
-
-{% block title %}Eliminar Historia Clínica{% endblock %}
+{% block title %}Eliminar Historia{% endblock %}
+{% block page_title %}Eliminar Historia{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Confirmar Eliminación</h3>
-                </div>
-                <div class="card-body">
-                    <p>¿Está seguro que desea eliminar la historia clínica #{{ object.numero_historia }}?</p>
-                    <p><strong>Mascota:</strong> {{ object.mascota }}</p>
-                    <p><strong>Fecha:</strong> {{ object.Fecha|date:"d/m/Y" }}</p>
-                    
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="text-end">
-                            <a href="{% url 'historia_list' %}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
-                        </div>
-                    </form>
-                </div>
+<div style="max-width:480px; margin:40px auto 0;">
+    <div class="confirm-box">
+        <div class="confirm-icon">🗑️</div>
+        <h3>¿Eliminar esta historia clínica?</h3>
+        <p>
+            Estás a punto de eliminar la historia
+            <strong style="color:#e8eaf0;">#{{ object.numero_historia }}</strong>
+            de <strong style="color:#e8eaf0;">{{ object.mascota.nombre }}</strong>.<br>
+            Esta acción <strong style="color:#ff6b6b;">no se puede deshacer</strong>.
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="btn-group">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i> Sí, eliminar
+                </button>
+                <a href="{% url 'historia_list' %}" class="btn btn-ghost">
+                    <i class="fa-solid fa-arrow-left"></i> Cancelar
+                </a>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}

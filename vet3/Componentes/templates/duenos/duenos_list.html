@@ -1,120 +1,90 @@
 {% extends 'base.html' %}
-
-{% block title %}Lista de Dueños{% endblock %}
+{% block title %}Dueños{% endblock %}
+{% block page_title %}Dueños{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Lista de Dueños</h2>
-        <a href="{% url 'duenos_create' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nuevo Dueño
-        </a>
-    </div>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <div class="card shadow">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover" id="duenos-table">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Edad</th>
-                            <th>Correo</th>
-                            <th>Teléfono</th>
-                            <th class="text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for dueno in duenos %}
-                        <tr>
-                            <td>{{ dueno.Nombre }}</td>
-                            <td>{{ dueno.Apellido }}</td>
-                            <td>{{ dueno.Edad }}</td>
-                            <td>{{ dueno.Correo }}</td>
-                            <td>{{ dueno.Telefono }}</td>
-                            <td class="text-center">
-                                <div class="btn-group" role="group">
-                                   
-                                    <a href="{% url 'duenos_update' dueno.pk %}" class="btn btn-sm btn-warning" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{% url 'duenos_delete' dueno.pk %}" class="btn btn-sm btn-danger" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> No hay dueños registrados.
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+<div class="page-header">
+    <div>
+        <h1>👥 Dueños</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span> Dueños
+            <span>·</span> <span style="color:#4ecdc4;">{{ total_duenos }} registrados</span>
         </div>
     </div>
+    <a href="{% url 'duenos_create' %}" class="btn btn-teal">
+        <i class="fa-solid fa-plus"></i> Nuevo Dueño
+    </a>
 </div>
 
-<style>
-.table-responsive {
-    overflow-x: auto;
-}
+<div class="card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dueno in duenos %}
+                <tr>
+                    <td style="color:#7b8099;font-size:.8rem;">{{ forloop.counter }}</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#2ab7af);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;">
+                                {{ dueno.Nombre|first|upper }}
+                            </div>
+                            <div>
+                                <div style="font-weight:600;">{{ dueno.Nombre }} {{ dueno.Apellido }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-teal">{{ dueno.Edad }} años</span></td>
+                    <td style="color:#7b8099;font-size:.83rem;">{{ dueno.Correo }}</td>
+                    <td style="color:#7b8099;font-size:.83rem;">{{ dueno.Telefono }}</td>
+                    <td>
+                        <div class="actions-group">
+                            <a href="{% url 'duenos_update' dueno.pk %}" class="action-btn action-edit" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <a href="{% url 'duenos_delete' dueno.pk %}" class="action-btn action-delete" title="Eliminar">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-users"></i>
+                            <p>No hay dueños registrados.</p>
+                            <a href="{% url 'duenos_create' %}" class="btn btn-teal" style="margin-top:12px;">Registrar primer dueño</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-.btn-group .btn {
-    margin-right: 5px;
-}
-</style>
-{% if is_paginated %}
-    <nav aria-label="Paginación">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Primera">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
-
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="page-btn"><i class="fa-solid fa-angles-left"></i></a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-btn"><i class="fa-solid fa-angle-left"></i></a>
+        {% endif %}
+        <span class="page-info">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-btn"><i class="fa-solid fa-angle-right"></i></a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn"><i class="fa-solid fa-angles-right"></i></a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

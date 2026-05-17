@@ -1,59 +1,66 @@
 {% extends 'base.html' %}
-
 {% block title %}Detalle de Mascota{% endblock %}
+{% block page_title %}Detalle de Mascota{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="page-header">
+    <div>
+        <h1>🐾 {{ mascota.nombre }}</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'mascotas_list' %}">Mascotas</a>
+            <span>/</span> Detalle
+        </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <a href="{% url 'mascotas_form' mascota.pk %}" class="btn btn-primary">
+            <i class="fa-solid fa-pen"></i> Editar
+        </a>
+        <a href="{% url 'mascotas_list' %}" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i> Volver
+        </a>
+    </div>
+</div>
+
+<div style="max-width:680px;">
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">Detalles de la Mascota</h3>
-                <div class="btn-group">
-                    <a href="{% url 'mascota_update' mascota.pk %}" class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a href="{% url 'mascota_list' %}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Volver
-                    </a>
-                </div>
-            </div>
+            <h3><i class="fa-solid fa-paw" style="color:#6c63ff;margin-right:8px;"></i>Información de la Mascota</h3>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Información General</h5>
-                    <table class="table">
-                        <tr>
-                            <th>Nombre:</th>
-                            <td>{{ mascota.nombre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Correo:</th>
-                            <td>{{ mascota.correo }}</td>
-                        </tr>
-                        <tr>
-                            <th>Raza:</th>
-                            <td>{{ mascota.raza }}</td>
-                        </tr>
-                    </table>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Nombre</div>
+                    <div class="detail-value">{{ mascota.nombre }}</div>
                 </div>
-                <div class="col-md-6">
-                    <h5>Información del Dueño</h5>
-                    <table class="table">
-                        <tr>
-                            <th>Nombre:</th>
-                            <td>{{ mascota.
-                                dueño.Nombre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Teléfono:</th>
-                            <td>{{ mascota.dueño.Telefono }}</td>
-                        </tr>
-                        <tr>
-                            <th>Correo:</th>
-                            <td>{{ mascota.dueño.Correo }}</td>
-                        </tr>
-                    </table>
+                <div class="detail-item">
+                    <div class="detail-label">Especie</div>
+                    <div class="detail-value">
+                        {% if mascota.especie == 'perro' %}
+                            🐕 Perro
+                        {% elif mascota.especie == 'gato' %}
+                            🐈 Gato
+                        {% else %}
+                            {{ mascota.otra_especie|default:"Otro" }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Raza</div>
+                    <div class="detail-value">{{ mascota.raza.nombre }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Dueño</div>
+                    <div class="detail-value">{{ mascota.dueno.Nombre }} {{ mascota.dueno.Apellido }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Teléfono del Dueño</div>
+                    <div class="detail-value">{{ mascota.dueno.Telefono }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Correo del Dueño</div>
+                    <div class="detail-value">{{ mascota.dueno.Correo }}</div>
                 </div>
             </div>
         </div>

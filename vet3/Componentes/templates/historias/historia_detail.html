@@ -1,37 +1,68 @@
 {% extends 'base.html' %}
-
-{% block title %}Historia Clínica - {{ historia.numero_historia }}{% endblock %}
+{% block title %}Historia #{{ historia.numero_historia }}{% endblock %}
+{% block page_title %}Historia Clínica{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="page-header">
+    <div>
+        <h1>📋 Historia #{{ historia.numero_historia }}</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'historia_list' %}">Historias</a>
+            <span>/</span> Detalle
+        </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+        <a href="{% url 'historia_update' historia.pk %}" class="btn btn-warning">
+            <i class="fa-solid fa-pen"></i> Editar
+        </a>
+        <a href="{% url 'historia_delete' historia.pk %}" class="btn btn-danger">
+            <i class="fa-solid fa-trash"></i> Eliminar
+        </a>
+    </div>
+</div>
+
+<div style="max-width:720px;">
     <div class="card">
         <div class="card-header">
-            <h3>Historia Clínica #{{ historia.numero_historia }}</h3>
+            <h3><i class="fa-solid fa-file-medical" style="color:#ffd93d;margin-right:8px;"></i>Detalle de Historia Clínica</h3>
+            <span class="badge badge-yellow">{{ historia.Fecha|date:"d/m/Y" }}</span>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Información de la Mascota</h5>
-                    <p><strong>Nombre:</strong> {{ historia.mascota.nombre }}</p>
-                    <p><strong>Dueño:</strong> {{ historia.mascota.dueno }}</p>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">N° Historia</div>
+                    <div class="detail-value">{{ historia.numero_historia }}</div>
                 </div>
-                <div class="col-md-6">
-                    <h5>Información de la Consulta</h5>
-                    <p><strong>Doctor:</strong> {{ historia.doctor.Nombre }}</p>
-                    <p><strong>Fecha:</strong> {{ historia.Fecha|date:"d/m/Y" }}</p>
+                <div class="detail-item">
+                    <div class="detail-label">Fecha</div>
+                    <div class="detail-value">{{ historia.Fecha|date:"d \d\e F \d\e Y" }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Mascota</div>
+                    <div class="detail-value" style="display:flex;align-items:center;gap:8px;">
+                        <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ffd93d,#e6c234);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#1a1d27;">
+                            {{ historia.mascota.nombre|first|upper }}
+                        </div>
+                        {{ historia.mascota.nombre }}
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Doctor</div>
+                    <div class="detail-value">Dr. {{ historia.doctor.Nombre }} {{ historia.doctor.Apellido }}</div>
+                </div>
+                <div class="detail-item" style="grid-column:1/-1;">
+                    <div class="detail-label">Descripción / Diagnóstico</div>
+                    <div class="detail-value" style="line-height:1.7;font-size:.9rem;color:#b0b5c9;">{{ historia.Descripcion }}</div>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-12">
-                    <h5>Descripción</h5>
-                    <p>{{ historia.Descripcion }}</p>
-                </div>
+
+            <div style="margin-top:20px;">
+                <a href="{% url 'historia_list' %}" class="btn btn-ghost">
+                    <i class="fa-solid fa-arrow-left"></i> Volver a la lista
+                </a>
             </div>
-        </div>
-        <div class="card-footer">
-            <a href="{% url 'historia_list' %}" class="btn btn-secondary">Volver</a>
-            <a href="{% url 'historia_update' historia.pk %}" class="btn btn-warning">Editar</a>
-            <a href="{% url 'historia_delete' historia.pk %}" class="btn btn-danger">Eliminar</a>
         </div>
     </div>
 </div>

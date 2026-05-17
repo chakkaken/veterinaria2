@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
-
-{% block title %}Cerrar Sesión{% endblock %}
+{% block title %}Sesión Cerrada{% endblock %}
+{% block page_title %}Sesión Cerrada{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <div class="card mt-5">
-                <div class="card-body">
-                    <h3 class="mb-4">Has cerrado sesión correctamente</h3>
-                    <p>¡Gracias por tu visita!</p>
-                    <a href="{% url 'login' %}" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Volver a Iniciar Sesión
-                    </a>
-                </div>
-            </div>
+<div style="max-width:480px; margin:40px auto 0;">
+    <div class="card" style="text-align:center;">
+        <div class="card-body" style="padding:40px 20px;">
+            <div style="font-size:3rem;margin-bottom:16px;">👋</div>
+            <h3>Has cerrado sesión correctamente</h3>
+            <p style="color:var(--text-muted);margin:16px 0 24px;">¡Gracias por tu visita!</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary">
+                <i class="fa-solid fa-right-to-bracket"></i> Volver al Panel de Control
+            </a>
         </div>
     </div>
 </div>

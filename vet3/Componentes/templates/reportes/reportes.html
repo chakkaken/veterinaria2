@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block page_title %}Reportes y Estadísticas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1><i class="fa-solid fa-chart-line"></i> Reportes y Estadísticas</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Dashboard</a> <span>/</span> Reportes
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-bottom: 24px;">
+    <div class="card-header">
+        <h3><i class="fa-solid fa-download"></i> Exportar Reportes</h3>
+    </div>
+    <div class="card-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+            <div style="background: rgba(108,99,255,.1); border: 1px solid rgba(108,99,255,.3); border-radius: 12px; padding: 20px;">
+                <h4 style="margin-bottom: 12px;"><i class="fa-solid fa-file-pdf" style="color: #ff6b6b;"></i> Reporte de Citas (PDF)</h4>
+                <form method="GET" action="{% url 'reporte_citas_pdf' %}" style="margin-bottom: 12px;">
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <input type="date" name="fecha_inicio" class="form-control" style="padding: 8px; font-size: 0.85rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <input type="date" name="fecha_fin" class="form-control" style="padding: 8px; font-size: 0.85rem;">
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-sm" style="width: 100%;">
+                        <i class="fa-solid fa-download"></i> Descargar PDF
+                    </button>
+                </form>
+            </div>
+
+            <div style="background: rgba(78,205,196,.1); border: 1px solid rgba(78,205,196,.3); border-radius: 12px; padding: 20px;">
+                <h4 style="margin-bottom: 12px;"><i class="fa-solid fa-file-pdf" style="color: #4ecdc4;"></i> Estadísticas Generales (PDF)</h4>
+                <a href="{% url 'reporte_estadisticas_pdf' %}" class="btn btn-teal btn-sm" style="width: 100%;">
+                    <i class="fa-solid fa-download"></i> Descargar PDF
+                </a>
+            </div>
+
+            <div style="background: rgba(108,99,255,.1); border: 1px solid rgba(108,99,255,.3); border-radius: 12px; padding: 20px;">
+                <h4 style="margin-bottom: 12px;"><i class="fa-solid fa-file-csv" style="color: #4ecdc4;"></i> Citas (CSV)</h4>
+                <form method="GET" action="{% url 'reporte_citas_csv' %}" style="margin-bottom: 12px;">
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <input type="date" name="fecha_inicio" class="form-control" style="padding: 8px; font-size: 0.85rem;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <input type="date" name="fecha_fin" class="form-control" style="padding: 8px; font-size: 0.85rem;">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;">
+                        <i class="fa-solid fa-download"></i> Descargar CSV
+                    </button>
+                </form>
+            </div>
+
+            <div style="background: rgba(255,217,61,.1); border: 1px solid rgba(255,217,61,.3); border-radius: 12px; padding: 20px;">
+                <h4 style="margin-bottom: 12px;"><i class="fa-solid fa-file-csv" style="color: #ffd93d;"></i> Mascotas (CSV)</h4>
+                <a href="{% url 'reporte_mascotas_csv' %}" class="btn btn-warning btn-sm" style="width: 100%;">
+                    <i class="fa-solid fa-download"></i> Descargar CSV
+                </a>
+            </div>
+
+            <div style="background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.3); border-radius: 12px; padding: 20px;">
+                <h4 style="margin-bottom: 12px;"><i class="fa-solid fa-file-csv" style="color: #ff6b6b;"></i> Dueños (CSV)</h4>
+                <a href="{% url 'reporte_duenos_csv' %}" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fa-solid fa-download"></i> Descargar CSV
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-chart-pie"></i> Estadísticas Generales</h3>
+        </div>
+        <div class="card-body">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div style="background: rgba(108,99,255,.1); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Mascotas</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #6c63ff;">{{ stats.total_mascotas }}</div>
+                </div>
+                <div style="background: rgba(78,205,196,.1); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Dueños</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #4ecdc4;">{{ stats.total_duenos }}</div>
+                </div>
+                <div style="background: rgba(255,217,61,.1); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Doctores</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #ffd93d;">{{ stats.total_doctores }}</div>
+                </div>
+                <div style="background: rgba(255,107,107,.1); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Citas</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #ff6b6b;">{{ stats.total_citas }}</div>
+                </div>
+                <div style="background: rgba(108,99,255,.1); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Citas este Mes</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #6c63ff;">{{ stats.citas_mes_actual }}</div>
+                </div>
+                <div style="background: rgba(78,205,196,.1); padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Historias Clínicas</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #4ecdc4;">{{ stats.total_historias }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-list-check"></i> Citas por Estado</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in citas_por_estado %}
+                        <tr>
+                            <td>
+                                {% if item.estado == 'pendiente' %}
+                                    <span class="badge badge-yellow">{{ item.estado|title }}</span>
+                                {% elif item.estado == 'confirmada' %}
+                                    <span class="badge badge-purple">{{ item.estado|title }}</span>
+                                {% elif item.estado == 'completada' %}
+                                    <span class="badge badge-teal">{{ item.estado|title }}</span>
+                                {% else %}
+                                    <span class="badge badge-red">{{ item.estado|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ item.total }}</strong></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" style="text-align: center; color: var(--text-muted);">No hay citas registradas</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-user-doctor"></i> Top Doctores por Citas</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Doctor</th>
+                            <th>Total Citas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in citas_por_doctor %}
+                        <tr>
+                            <td>Dr. {{ item.doctor__Nombre }} {{ item.doctor__Apellido }}</td>
+                            <td><strong>{{ item.total }}</strong></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" style="text-align: center; color: var(--text-muted);">No hay doctores registrados</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-paw"></i> Mascotas más Frecuentes</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mascota</th>
+                            <th>Total Citas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in top_mascotas %}
+                        <tr>
+                            <td>{{ item.mascota__nombre }}</td>
+                            <td><strong>{{ item.total }}</strong></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" style="text-align: center; color: var(--text-muted);">No hay mascotas registradas</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

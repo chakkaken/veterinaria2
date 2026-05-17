@@ -1,89 +1,68 @@
 {% extends 'base.html' %}
-
-{% block title %}
-Lista de Razas  <!-- Título de la página (pestaña del navegador) -->
-{% endblock %}
+{% block title %}Razas{% endblock %}
+{% block page_title %}Razas{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Lista de Mascotas</h2>
-        <a href="{% url 'razas_create' %}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nueva raza
-        </a>
+<div class="page-header">
+    <div>
+        <h1>🐕 Razas</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span> Razas
+        </div>
     </div>
-    <div class="row">
+    <a href="{% url 'razas_create' %}" class="btn btn-primary" style="background:linear-gradient(135deg,#a29bfe,#6c63ff);">
+        <i class="fa-solid fa-plus"></i> Nueva Raza
+    </a>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;">
     {% for raza in razas %}
-    <div class="col-md-5 mb-4">
-        <div class="card h-100">
-            {% if raza.imagen %}
-                <img src="{{ raza.imagen.url }}" class="card-img-top" alt="{{ raza.nombre }}" style="height: 200px; object-fit: cover;">
-            {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fas fa-dog fa-3x text-muted"></i>
-                </div>
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ raza.nombre }}</h5>
-                <div class="btn-group">
-                    <a href="{% url 'razas_form' raza.pk %}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a href="{% url 'razas_delete' raza.pk %}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i> Eliminar
-                    </a>
-                    <a href="{% url 'dashboard'  %}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-warning"></i> principal
-                    </a>
-                </div>
+    <div class="card" style="overflow:visible;transition:transform .2s;" onmouseenter="this.style.transform='translateY(-4px)'" onmouseleave="this.style.transform='translateY(0)'">
+        {% if raza.imagen %}
+        <div style="height:140px;overflow:hidden;border-radius:12px 12px 0 0;">
+            <img src="{{ raza.imagen.url }}" alt="{{ raza.nombre }}"
+                 style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        {% else %}
+        <div style="height:100px;background:linear-gradient(135deg,rgba(162,155,254,.15),rgba(108,99,255,.1));display:flex;align-items:center;justify-content:center;font-size:3rem;">
+            🐾
+        </div>
+        {% endif %}
+        <div class="card-body">
+            <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">{{ raza.nombre }}</div>
+            <div class="actions-group" style="margin-top:12px;">
+                <a href="{% url 'razas_form' raza.pk %}" class="action-btn action-edit" title="Editar">
+                    <i class="fa-solid fa-pen"></i>
+                </a>
+                <a href="{% url 'razas_delete' raza.pk %}" class="action-btn action-delete" title="Eliminar">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
             </div>
         </div>
     </div>
     {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info" role="alert">
-            No hay razas disponibles.
+    <div style="grid-column:1/-1;">
+        <div class="empty-state">
+            <i class="fa-solid fa-dog"></i>
+            <p>No hay razas registradas.</p>
+            <a href="{% url 'razas_create' %}" class="btn btn-primary" style="margin-top:12px;">Registrar primera raza</a>
         </div>
     </div>
     {% endfor %}
 </div>
-<!-- Paginación -->
+
 {% if is_paginated %}
-    <nav aria-label="Paginación">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Primera">
-                    <span aria-hidden="true">&laquo;&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {% endif %}
-
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
-
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última">
-                    <span aria-hidden="true">&raquo;&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1" class="page-btn"><i class="fa-solid fa-angles-left"></i></a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-btn"><i class="fa-solid fa-angle-left"></i></a>
+    {% endif %}
+    <span class="page-info">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-btn"><i class="fa-solid fa-angle-right"></i></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn"><i class="fa-solid fa-angles-right"></i></a>
     {% endif %}
 </div>
+{% endif %}
 {% endblock %}

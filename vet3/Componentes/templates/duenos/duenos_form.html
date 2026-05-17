@@ -1,53 +1,71 @@
 {% extends 'base.html' %}
-
-{% block title %}
-    {% if form.instance.pk %}Editar Dueño{% else %}Nuevo Dueño{% endif %}
-{% endblock %}
+{% block title %}Editar Dueño{% endblock %}
+{% block page_title %}Editar Dueño{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>{% if form.instance.pk %}Editar Dueño{% else %}Nuevo Dueño{% endif %}</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.Nombre.label_tag }}
-            {{ form.Nombre }}
-            {% if form.Nombre.errors %}
-                <div class="text-danger">{{ form.Nombre.errors }}</div>
-            {% endif %}
+<div class="page-header">
+    <div>
+        <h1>👥 Editar Dueño</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'duenos_list' %}">Dueños</a>
+            <span>/</span> Editar
         </div>
-        <div class="mb-3">
-            {{ form.Apellido.label_tag }}
-            {{ form.Apellido }}
-            {% if form.Apellido.errors %}
-                <div class="text-danger">{{ form.Apellido.errors }}</div>
-            {% endif %}
+    </div>
+</div>
+
+<div style="max-width:620px;">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-user-pen" style="color:#4ecdc4;margin-right:8px;"></i>Actualizar Datos</h3>
         </div>
-        <div class="mb-3">
-            {{ form.Edad.label_tag }}
-            {{ form.Edad }}
-            {% if form.Edad.errors %}
-                <div class="text-danger">{{ form.Edad.errors }}</div>
-            {% endif %}
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label">Nombre</label>
+                        {{ form.Nombre }}
+                        {% if form.Nombre.errors %}<ul class="errorlist">{% for e in form.Nombre.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Apellido</label>
+                        {{ form.Apellido }}
+                        {% if form.Apellido.errors %}<ul class="errorlist">{% for e in form.Apellido.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label">Edad</label>
+                        {{ form.Edad }}
+                        {% if form.Edad.errors %}<ul class="errorlist">{% for e in form.Edad.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        {{ form.Telefono }}
+                        {% if form.Telefono.errors %}<ul class="errorlist">{% for e in form.Telefono.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Correo electrónico</label>
+                    {{ form.Correo }}
+                    {% if form.Correo.errors %}<ul class="errorlist">{% for e in form.Correo.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div style="display:flex;gap:12px;margin-top:8px;">
+                    <button type="submit" class="btn btn-teal">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                    </button>
+                    <a href="{% url 'duenos_list' %}" class="btn btn-ghost">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </a>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            {{ form.Correo.label_tag }}
-            {{ form.Correo }}
-            {% if form.Correo.errors %}
-                <div class="text-danger">{{ form.Correo.errors }}</div>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            {{ form.Telefono.label_tag }}
-            {{ form.Telefono }}
-            {% if form.Telefono.errors %}
-                <div class="text-danger">{{ form.Telefono.errors }}</div>
-            {% endif %}
-        </div>
-        <button type="submit" class="btn btn-primary">
-            {% if form.instance.pk %}Guardar Cambios{% else %}Crear Dueño{% endif %}
-        </button>
-        <a href="{% url 'duenos_list' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+    </div>
 </div>
 {% endblock %}

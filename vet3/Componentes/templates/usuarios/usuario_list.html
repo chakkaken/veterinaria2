@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block page_title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1><i class="fa-solid fa-users-gear"></i> Usuarios del Sistema</h1>
+        <div class="breadcrumb">
+            <a href="{% url 'dashboard' %}">Dashboard</a> <span>/</span> Usuarios
+        </div>
+    </div>
+    <a href="{% url 'usuario_create' %}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Nuevo Usuario
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Lista de Usuarios</h3>
+        <span class="badge badge-purple">{{ usuarios.count }} total</span>
+    </div>
+    <div class="card-body">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Teléfono</th>
+                        <th>Staff</th>
+                        <th>Activo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>
+                            <strong>{{ usuario.username }}</strong>
+                        </td>
+                        <td>{{ usuario.email|default:"-" }}</td>
+                        <td>
+                            {% if usuario.rol == 'admin' %}
+                                <span class="badge badge-red">Administrador</span>
+                            {% elif usuario.rol == 'veterinario' %}
+                                <span class="badge badge-teal">Veterinario</span>
+                            {% else %}
+                                <span class="badge badge-purple">Recepcionista</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ usuario.telefono|default:"-" }}</td>
+                        <td>
+                            {% if usuario.is_staff %}
+                                <i class="fa-solid fa-check" style="color: #4ecdc4;"></i>
+                            {% else %}
+                                <i class="fa-solid fa-xmark" style="color: #ff6b6b;"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if usuario.is_active %}
+                                <i class="fa-solid fa-check" style="color: #4ecdc4;"></i>
+                            {% else %}
+                                <i class="fa-solid fa-xmark" style="color: #ff6b6b;"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions-group">
+                                <a href="{% url 'usuario_update' usuario.pk %}" class="action-btn action-edit" title="Editar">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                {% if user.username == 'admin' and usuario.username != 'admin' or usuario.rol != 'admin' and usuario.username != 'admin' %}
+                                <a href="{% url 'usuario_delete' usuario.pk %}" class="action-btn action-delete" title="Eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-users-slash"></i>
+                                <p>No hay usuarios registrados.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="page-btn"><i class="fa-solid fa-angles-left"></i></a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-btn"><i class="fa-solid fa-angle-left"></i></a>
+            {% endif %}
+            <span class="page-info">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-btn"><i class="fa-solid fa-angle-right"></i></a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="page-btn"><i class="fa-solid fa-angles-right"></i></a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
