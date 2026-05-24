@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Usuario, Mascotas, Duenos, Doctores, Especialidades, Historias, Raza, Citas
@@ -28,6 +30,23 @@ class UsuarioCreationForm(UserCreationForm):
         labels = {
             'username': 'Nombre de usuario',
         }
+
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+
+        if len(password) < 8:
+            raise forms.ValidationError('La contraseña debe tener al menos 8 caracteres.')
+
+        if not re.search(r'[A-Z]', password):
+            raise forms.ValidationError('La contraseña debe contener al menos una letra mayúscula.')
+
+        if not re.search(r'[0-9]', password):
+            raise forms.ValidationError('La contraseña debe contener al menos un número.')
+
+        if not re.search(r'[^a-zA-Z0-9]', password):
+            raise forms.ValidationError('La contraseña debe contener al menos un símbolo (ej: @, #, $, %, etc.).')
+
+        return password
 
 
 class UsuarioChangeForm(forms.ModelForm):
