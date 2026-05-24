@@ -16,5 +16,4 @@ env/
 *.swo
 .DS_Store
 media/razas/
-media/static/logo3.svg
 *.log
