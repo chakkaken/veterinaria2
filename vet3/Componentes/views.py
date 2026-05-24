@@ -15,7 +15,7 @@ from django.http import HttpResponse
 
 from .models import Mascotas, Duenos, Doctores, Raza, Usuario, Historias, Especialidades, Citas
 from .forms import (
-    UsuarioCreationForm, UsuarioChangeForm, UsuarioForm, MascotasForm, DuenosForm, DoctoresForm,
+    UsuarioCreationForm, UsuarioChangeForm, UsuarioNuevoForm, UsuarioForm, MascotasForm, DuenosForm, DoctoresForm,
     EspecialidadesForm, HistoriasForm, RazaForm, CitasForm
 )
 from .services.email_service import EmailNotificationService
@@ -474,6 +474,21 @@ class UsuarioDeleteView(LoginRequiredMixin, StaffRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, 'Usuario eliminado exitosamente.')
         return super().form_valid(form)
+
+
+class UsuarioNuevoCreateView(CreateView):
+    model = Usuario
+    form_class = UsuarioNuevoForm
+    template_name = 'usuarios/usuario_nuevo.html'
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Usuario creado exitosamente. Ahora puedes iniciar sesión.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear el usuario. Revise los datos.')
+        return super().form_invalid(form)
 
 
 # ─── Citas ────────────────────────────────────────────────────────────────────

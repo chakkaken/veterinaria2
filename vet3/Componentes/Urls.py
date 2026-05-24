@@ -18,7 +18,7 @@ from .views import (
     # Citas
     CitasListView, CitasDetailView, CitasCreateView, CitasUpdateView, CitasDeleteView,
     # Usuarios
-    UsuarioCreateView, UsuarioListView, UsuarioUpdateView, UsuarioDeleteView,
+    UsuarioCreateView, UsuarioNuevoCreateView, UsuarioListView, UsuarioUpdateView, UsuarioDeleteView,
     # Reportes
     ReportesView, ReporteCitasPDFView, ReporteEstadisticasPDFView,
     ReporteCitasCSVView, ReporteMascotasCSVView, ReporteDuenosCSVView,
@@ -78,6 +78,7 @@ urlpatterns = [
 
     # URLs para Usuarios
     path('usuarios/', UsuarioListView.as_view(), name='usuario_list'),
+    path('usuarios/nuevo/', UsuarioNuevoCreateView.as_view(), name='usuario_nuevo'),
     path('usuarios/crear/', UsuarioCreateView.as_view(), name='usuario_create'),
     path('usuarios/<int:pk>/editar/', UsuarioUpdateView.as_view(), name='usuario_update'),
     path('usuarios/<int:pk>/eliminar/', UsuarioDeleteView.as_view(), name='usuario_delete'),
