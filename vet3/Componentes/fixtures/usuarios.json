@@ -1,0 +1,22 @@
+[
+{
+  "model": "Componentes.usuario",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$ha3fHCeImRuqTOZN3jnpcK$ES+tQEGZV/fWmr/LmNvYxuoaGbUAk63aP7/AikqKQn8=",
+    "last_login": null,
+    "is_superuser": true,
+    "first_name": "",
+    "last_name": "",
+    "date_joined": "2026-05-24T00:46:01.492Z",
+    "username": "admin",
+    "email": "",
+    "rol": "admin",
+    "telefono": "",
+    "is_staff": true,
+    "is_active": true,
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]
