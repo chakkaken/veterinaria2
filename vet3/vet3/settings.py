@@ -174,4 +174,4 @@ if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
     DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'noreply@vetsystem.com'
+    DEFAULT_FROM_EMAIL = 'kelvinjn33@gmail.com'
