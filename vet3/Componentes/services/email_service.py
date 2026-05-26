@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+from django.urls import reverse
 
 
 class EmailNotificationService:
@@ -94,6 +95,37 @@ Equipo VetSystem
             recipient_list=[cita.dueno.Correo],
             fail_silently=True,
         )
+
+    @staticmethod
+    def enviar_verificacion(usuario, token, request):
+        """Envía email de verificación con token."""
+        link = request.build_absolute_uri(
+            reverse('verificar_email', kwargs={'token': token.token})
+        )
+        subject = 'Verifica tu cuenta - VetSystem'
+        message = f"""
+Estimado/a {usuario.username},
+
+Gracias por registrarte en VetSystem.
+
+Para activar tu cuenta, haz clic en el siguiente enlace:
+{link}
+
+Este enlace expirará en 24 horas.
+
+Si no solicitaste esta cuenta, ignora este mensaje.
+
+Saludos,
+Equipo VetSystem
+"""
+        if usuario.email:
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[usuario.email],
+                fail_silently=False,
+            )
 
     @staticmethod
     def enviar_bienvenida(usuario):

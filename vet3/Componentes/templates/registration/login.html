@@ -237,9 +237,19 @@
             </button>
         </form>
 
-        <div style="text-align:center; margin-top:16px;">
-            <a href="{% url 'dashboard' %}" class="btn-back">
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+            <a href="{% url 'dashboard' %}" class="btn-back" style="justify-content:center;">
                 <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
+            </a>
+            <a href="{% url 'usuario_nuevo' %}" class="btn-back" style="justify-content:center; border-color:rgba(108,99,255,.3);">
+                <i class="fa-solid fa-user-plus"></i> Crear cuenta nueva
+            </a>
+        </div>
+
+        <div style="text-align:center; margin-top:16px;">
+            <a href="{% url 'password_reset' %}" style="color:#7b8099; font-size:.82rem; text-decoration:none; transition:color .2s;"
+               onmouseenter="this.style.color='#6c63ff'" onmouseleave="this.style.color='#7b8099'">
+                ¿Olvidaste tu contraseña?
             </a>
         </div>
 

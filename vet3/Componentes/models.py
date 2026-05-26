@@ -1,5 +1,7 @@
+import secrets
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 class Usuario(AbstractUser):
@@ -15,6 +17,7 @@ class Usuario(AbstractUser):
     telefono = models.CharField(max_length=15, blank=True, default='')
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False, verbose_name='Email verificado')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
@@ -170,3 +173,25 @@ class Citas(models.Model):
         verbose_name = "Cita"
         verbose_name_plural = "Citas"
         ordering = ['-fecha_cita']
+
+
+class VerificationToken(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='verification_tokens')
+    token = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = secrets.token_urlsafe(48)
+        if not self.expires_at:
+            self.expires_at = timezone.now() + timezone.timedelta(hours=24)
+        super().save(*args, **kwargs)
+
+    @property
+    def is_expired(self):
+        return timezone.now() >= self.expires_at
+
+    class Meta:
+        verbose_name = "Token de verificación"
+        verbose_name_plural = "Tokens de verificación"

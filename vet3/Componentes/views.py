@@ -11,16 +11,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
-from .models import Mascotas, Duenos, Doctores, Raza, Usuario, Historias, Especialidades, Citas
+from .models import Mascotas, Duenos, Doctores, Raza, Usuario, Historias, Especialidades, Citas, VerificationToken
 from .forms import (
     UsuarioCreationForm, UsuarioChangeForm, UsuarioNuevoForm, UsuarioForm, MascotasForm, DuenosForm, DoctoresForm,
     EspecialidadesForm, HistoriasForm, RazaForm, CitasForm
 )
 from .services.email_service import EmailNotificationService
 from .services.report_service import ReportService
-from django.http import HttpResponse
 from datetime import datetime, timedelta
 from django.db.models import Count
 from django.db.models.deletion import ProtectedError
@@ -483,12 +482,55 @@ class UsuarioNuevoCreateView(CreateView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Usuario creado exitosamente. Ahora puedes iniciar sesión.')
-        return super().form_valid(form)
+        self.object = form.save(commit=False)
+        self.object.is_active = False
+        self.object.save()
+        form.save_m2m()
+
+        token = VerificationToken.objects.create(usuario=self.object)
+
+        try:
+            EmailNotificationService.enviar_verificacion(self.object, token, self.request)
+            messages.success(
+                self.request,
+                'Cuenta creada. Hemos enviado un enlace de verificación a tu correo electrónico.'
+            )
+        except Exception:
+            messages.success(
+                self.request,
+                'Cuenta creada. Por favor contacta al administrador para activar tu cuenta.'
+            )
+
+        return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Error al crear el usuario. Revise los datos.')
         return super().form_invalid(form)
+
+
+# ─── Verificación de Email ───────────────────────────────────────────────────
+
+class VerificarEmailView(TemplateView):
+    template_name = 'registration/verificar_email.html'
+
+    def get(self, request, *args, **kwargs):
+        token_str = kwargs.get('token')
+        try:
+            token = VerificationToken.objects.get(token=token_str)
+        except VerificationToken.DoesNotExist:
+            return render(request, self.template_name, {'valido': False, 'expirado': False}, status=400)
+
+        if token.is_expired:
+            return render(request, self.template_name, {'valido': False, 'expirado': True}, status=400)
+
+        usuario = token.usuario
+        usuario.is_active = True
+        usuario.is_verified = True
+        usuario.save()
+
+        token.delete()
+
+        return render(request, self.template_name, {'valido': True})
 
 
 # ─── Citas ────────────────────────────────────────────────────────────────────

@@ -4,9 +4,16 @@
 
 {% block content %}
 {% if not user.is_authenticated %}
-<div class="alert alert-info" style="margin-bottom:20px;">
-    <i class="fa-solid fa-circle-info"></i>
-    <span>Está viendo el dashboard en modo lectura. <a href="{% url 'login' %}" style="color:var(--accent);font-weight:600;">Inicie sesión</a> para acceder a todas las funciones.</span>
+<div class="alert alert-info" style="margin-bottom:20px; display:flex; align-items:center; justify-content:space-between;">
+    <span><i class="fa-solid fa-circle-info"></i> Está viendo el dashboard en modo lectura.</span>
+    <div style="display:flex; gap:8px;">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-sm" style="text-decoration:none;">
+            <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+        </a>
+        <a href="{% url 'usuario_nuevo' %}" class="btn btn-ghost btn-sm" style="text-decoration:none;">
+            <i class="fa-solid fa-user-plus"></i> Crear Cuenta
+        </a>
+    </div>
 </div>
 {% endif %}
 

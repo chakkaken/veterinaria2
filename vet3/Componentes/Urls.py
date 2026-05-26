@@ -22,6 +22,8 @@ from .views import (
     # Reportes
     ReportesView, ReporteCitasPDFView, ReporteEstadisticasPDFView,
     ReporteCitasCSVView, ReporteMascotasCSVView, ReporteDuenosCSVView,
+    # Verificación
+    VerificarEmailView,
 )
 
 
@@ -90,6 +92,9 @@ urlpatterns = [
     path('reportes/citas/csv/', ReporteCitasCSVView.as_view(), name='reporte_citas_csv'),
     path('reportes/mascotas/csv/', ReporteMascotasCSVView.as_view(), name='reporte_mascotas_csv'),
     path('reportes/duenos/csv/', ReporteDuenosCSVView.as_view(), name='reporte_duenos_csv'),
+
+    # Verificación de email
+    path('verificar-email/<str:token>/', VerificarEmailView.as_view(), name='verificar_email'),
 
    # path('enviar-correo/', views.EnviarCorreoView, name='enviar_correo')
 ]

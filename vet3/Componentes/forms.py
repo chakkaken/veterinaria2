@@ -61,6 +61,14 @@ class UsuarioNuevoForm(UserCreationForm):
         model = Usuario
         fields = ['username', 'email', 'password1', 'password2']
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError('El correo electrónico es requerido.')
+        if Usuario.objects.filter(email=email).exists():
+            raise forms.ValidationError('Este correo electrónico ya está registrado.')
+        return email
+
     def clean_password1(self):
         password = self.cleaned_data.get('password1')
 
