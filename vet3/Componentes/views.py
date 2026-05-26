@@ -21,6 +21,7 @@ from .forms import (
 from .services.email_service import EmailNotificationService
 from .services.report_service import ReportService
 from datetime import datetime, timedelta
+from django.db import transaction
 from django.db.models import Count
 from django.db.models.deletion import ProtectedError
 
@@ -482,26 +483,35 @@ class UsuarioNuevoCreateView(CreateView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.is_active = False
-        self.object.save()
-        form.save_m2m()
-
-        token = VerificationToken.objects.create(usuario=self.object)
-
         try:
-            EmailNotificationService.enviar_verificacion(self.object, token, self.request)
-            messages.success(
-                self.request,
-                'Cuenta creada. Hemos enviado un enlace de verificación a tu correo electrónico.'
-            )
-        except Exception:
-            messages.success(
-                self.request,
-                'Cuenta creada. Por favor contacta al administrador para activar tu cuenta.'
-            )
+            with transaction.atomic():
+                self.object = form.save(commit=False)
+                self.object.is_active = False
+                self.object.save()
+                form.save_m2m()
 
-        return HttpResponseRedirect(self.success_url)
+                token = VerificationToken.objects.create(usuario=self.object)
+
+            try:
+                EmailNotificationService.enviar_verificacion(self.object, token, self.request)
+                messages.success(
+                    self.request,
+                    'Cuenta creada. Hemos enviado un enlace de verificación a tu correo electrónico.'
+                )
+            except Exception:
+                messages.success(
+                    self.request,
+                    'Cuenta creada. Por favor contacta al administrador para activar tu cuenta.'
+                )
+
+            return HttpResponseRedirect(self.success_url)
+
+        except Exception as e:
+            messages.error(
+                self.request,
+                f'Error al crear la cuenta: {e}'
+            )
+            return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Error al crear el usuario. Revise los datos.')

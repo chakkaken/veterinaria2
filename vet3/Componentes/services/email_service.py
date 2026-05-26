@@ -118,7 +118,7 @@ Si no solicitaste esta cuenta, ignora este mensaje.
 Saludos,
 Equipo VetSystem
 """
-        if usuario.email:
+        if usuario.email and settings.EMAIL_HOST_USER:
             send_mail(
                 subject=subject,
                 message=message,
