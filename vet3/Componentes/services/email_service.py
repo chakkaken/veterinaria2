@@ -31,7 +31,7 @@ Equipo VetSystem
         send_mail(
             subject=subject,
             message=message,
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[cita.dueno.Correo],
             fail_silently=True,
         )
@@ -64,7 +64,7 @@ Equipo VetSystem
         send_mail(
             subject=subject,
             message=message,
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[cita.dueno.Correo],
             fail_silently=True,
         )
@@ -91,7 +91,7 @@ Equipo VetSystem
         send_mail(
             subject=subject,
             message=message,
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[cita.dueno.Correo],
             fail_silently=True,
         )
@@ -118,11 +118,11 @@ Si no solicitaste esta cuenta, ignora este mensaje.
 Saludos,
 Equipo VetSystem
 """
-        if usuario.email and settings.EMAIL_HOST_USER:
+        if usuario.email:
             send_mail(
                 subject=subject,
                 message=message,
-                from_email=settings.EMAIL_HOST_USER,
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[usuario.email],
                 fail_silently=False,
             )
@@ -150,7 +150,7 @@ Equipo VetSystem
             send_mail(
                 subject=subject,
                 message=message,
-                from_email=settings.EMAIL_HOST_USER,
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[usuario.email],
                 fail_silently=True,
             )

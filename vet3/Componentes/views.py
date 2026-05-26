@@ -4,7 +4,7 @@ from django.views.generic import (
     UpdateView, DeleteView
 )
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
@@ -492,6 +492,10 @@ class UsuarioNuevoCreateView(CreateView):
 
                 token = VerificationToken.objects.create(usuario=self.object)
 
+            link = self.request.build_absolute_uri(
+                reverse('verificar_email', kwargs={'token': token.token})
+            )
+
             try:
                 EmailNotificationService.enviar_verificacion(self.object, token, self.request)
                 messages.success(
@@ -499,9 +503,9 @@ class UsuarioNuevoCreateView(CreateView):
                     'Cuenta creada. Hemos enviado un enlace de verificación a tu correo electrónico.'
                 )
             except Exception:
-                messages.success(
+                messages.warning(
                     self.request,
-                    'Cuenta creada. Por favor contacta al administrador para activar tu cuenta.'
+                    f'Cuenta creada. Usa este enlace para verificar tu cuenta: {link}'
                 )
 
             return HttpResponseRedirect(self.success_url)

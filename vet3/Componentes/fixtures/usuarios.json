@@ -15,6 +15,7 @@
     "telefono": "",
     "is_staff": true,
     "is_active": true,
+    "is_verified": true,
     "groups": [],
     "user_permissions": []
   }
