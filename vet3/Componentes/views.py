@@ -11,7 +11,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.mail import send_mail
+import logging
 from django.http import HttpResponse, HttpResponseRedirect
+
+logger = logging.getLogger(__name__)
 
 from .models import Mascotas, Duenos, Doctores, Raza, Usuario, Historias, Especialidades, Citas, VerificationToken
 from .forms import (
@@ -496,30 +499,35 @@ class UsuarioNuevoCreateView(CreateView):
                 reverse('verificar_email', kwargs={'token': token.token})
             )
 
+            email_enviado = False
             try:
                 EmailNotificationService.enviar_verificacion(self.object, token, self.request)
-                messages.success(
-                    self.request,
-                    'Cuenta creada. Hemos enviado un enlace de verificación a tu correo electrónico.'
-                )
-            except Exception:
-                messages.warning(
-                    self.request,
-                    f'Cuenta creada. Usa este enlace para verificar tu cuenta: {link}'
-                )
+                email_enviado = True
+            except Exception as e:
+                logger.warning(f'Error al enviar email de verificación a {self.object.email}: {e}')
 
-            return HttpResponseRedirect(self.success_url)
+            return render(self.request, 'usuarios/usuario_creado.html', {
+                'link': link,
+                'email_enviado': email_enviado,
+                'email': self.object.email,
+                'username': self.object.username,
+            })
 
         except Exception as e:
+            logger.error(f'Error al crear cuenta de usuario: {e}', exc_info=True)
             messages.error(
                 self.request,
-                f'Error al crear la cuenta: {e}'
+                'Error al crear la cuenta. Intente de nuevo más tarde.'
             )
             return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Error al crear el usuario. Revise los datos.')
-        return super().form_invalid(form)
+        try:
+            return super().form_invalid(form)
+        except Exception as e:
+            logger.error(f'Error en formulario de registro: {e}', exc_info=True)
+            messages.error(self.request, 'Error al procesar el formulario.')
+            return HttpResponseRedirect(self.success_url)
 
 
 # ─── Verificación de Email ───────────────────────────────────────────────────

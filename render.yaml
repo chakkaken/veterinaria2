@@ -19,9 +19,13 @@ services:
         value: "*"
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: SENDGRID_API_KEY
+        sync: false
       - key: EMAIL_HOST_USER
         sync: false
       - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
         sync: false
 
 databases:
