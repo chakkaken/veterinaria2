@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from dotenv import load_dotenv
-load_dotenv()
-import os
 from pathlib import Path
+load_dotenv(Path(__file__).resolve().parent.parent / '.env')
+import os
 import dj_database_url
 from django.contrib.messages import constants as message_constants
 MESSAGE_TAGS = {
