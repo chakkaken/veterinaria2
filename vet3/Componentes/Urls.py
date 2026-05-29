@@ -1,10 +1,10 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from . import views
-from django.contrib.auth import views as auth_views
 from .views import (
     # Autenticación
-    CustomLoginView, CustomLogoutView, DashboardView, IndexView,
+    CustomLoginView, CustomLogoutView, CustomPasswordResetView, CustomPasswordResetDoneView, DashboardView, IndexView,
     # Mascotas
     MascotasPublicListView, MascotaListView, MascotaCreateView, MascotaUpdateView, MascotaDeleteView,
     # Dueños
@@ -33,8 +33,8 @@ urlpatterns = [
 
      path('login/', CustomLoginView.as_view(), name='login'),
      path('logout/', CustomLogoutView.as_view(), name='logout'),
-     path('reset_password/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+     path('reset_password/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('reset_password_sent/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 

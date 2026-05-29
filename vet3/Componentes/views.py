@@ -5,7 +5,7 @@ from django.views.generic import (
 )
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -65,6 +65,25 @@ class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.success(request, 'Has cerrado sesión exitosamente.')
         return super().dispatch(request, *args, **kwargs)
+
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except Exception as e:
+            logger.error(f'Error al enviar email de restablecimiento: {e}', exc_info=True)
+            messages.error(self.request, 'No se pudo enviar el correo de recuperación. Verifica que el correo sea correcto o intenta más tarde.')
+            return self.form_invalid(form)
+
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'registration/password_reset_done.html'
 
 
 # ─── Página Principal ──────────────────────────────────────────────────────────
@@ -490,6 +509,8 @@ class UsuarioNuevoCreateView(CreateView):
             with transaction.atomic():
                 self.object = form.save(commit=False)
                 self.object.is_active = False
+                self.object.is_verified = False
+                self.object.rol = 'recepcionista'
                 self.object.save()
                 form.save_m2m()
 
@@ -505,6 +526,8 @@ class UsuarioNuevoCreateView(CreateView):
                 email_enviado = True
             except Exception as e:
                 logger.warning(f'Error al enviar email de verificación a {self.object.email}: {e}')
+
+            logger.info(f'Cuenta creada exitosamente: {self.object.username} ({self.object.email})')
 
             return render(self.request, 'usuarios/usuario_creado.html', {
                 'link': link,
@@ -522,12 +545,8 @@ class UsuarioNuevoCreateView(CreateView):
             return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
-        try:
-            return super().form_invalid(form)
-        except Exception as e:
-            logger.error(f'Error en formulario de registro: {e}', exc_info=True)
-            messages.error(self.request, 'Error al procesar el formulario.')
-            return HttpResponseRedirect(self.success_url)
+        logger.warning(f'Error en formulario de registro para {self.request.POST.get("username", "desconocido")}: {form.errors.as_json()}')
+        return super().form_invalid(form)
 
 
 # ─── Verificación de Email ───────────────────────────────────────────────────

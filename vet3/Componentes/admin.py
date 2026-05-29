@@ -12,18 +12,19 @@ class UsuarioAdmin(BaseUserAdmin):
     list_filter = ('is_active', 'is_verified', 'rol', 'is_staff')
     search_fields = ('username', 'email')
     ordering = ('username',)
+    filter_horizontal = ('groups', 'user_permissions')
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Información personal', {'fields': ('email', 'telefono')}),
-        ('Permisos', {'fields': ('is_active', 'is_staff', 'is_superuser', 'rol', 'groups', 'user_permissions')}),
+        ('Información personal', {'fields': ('email', 'telefono', 'rol')}),
+        ('Permisos', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Fechas importantes', {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2', 'rol', 'is_staff', 'is_active')
+            'fields': ('username', 'email', 'password1', 'password2', 'rol', 'telefono', 'is_staff', 'is_active')
         }),
     )
 

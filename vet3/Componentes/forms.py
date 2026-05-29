@@ -98,7 +98,7 @@ class UsuarioNuevoForm(UserCreationForm):
 class UsuarioChangeForm(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'rol', 'telefono', 'is_staff', 'is_active']
+        fields = ['username', 'email', 'rol', 'telefono', 'is_staff', 'is_active', 'groups', 'user_permissions']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
