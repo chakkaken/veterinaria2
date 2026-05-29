@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
-from Componentes.models import Duenos, Especialidades, Doctores, Raza, Mascotas, Historias, Citas
+from vet3.Componentes.models import Duenos, Especialidades, Doctores, Raza, Mascotas, Historias, Citas
 
 Usuario = get_user_model()
 

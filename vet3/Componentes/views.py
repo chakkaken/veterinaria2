@@ -334,7 +334,7 @@ class DoctoresDeleteView(LoginRequiredMixin, DeleteView):
 
 # ─── Historias Clínicas ───────────────────────────────────────────────────────
 
-class HistoriaListView(LoginRequiredMixin, RecepcionistaRequiredMixin, ListView):
+class HistoriaListView(LoginRequiredMixin, VeterinarioRequiredMixin, ListView):
     login_url = 'login'
     model = Historias
     template_name = 'historias/historia_list.html'
@@ -368,7 +368,7 @@ class HistoriaListView(LoginRequiredMixin, RecepcionistaRequiredMixin, ListView)
         return context
 
 
-class HistoriaDetailView(LoginRequiredMixin, RecepcionistaRequiredMixin, DetailView):
+class HistoriaDetailView(LoginRequiredMixin, VeterinarioRequiredMixin, DetailView):
     login_url = 'login'
     model = Historias
     template_name = 'historias/historia_detail.html'
@@ -378,7 +378,7 @@ class HistoriaDetailView(LoginRequiredMixin, RecepcionistaRequiredMixin, DetailV
         return Historias.objects.select_related('mascota', 'doctor')
 
 
-class HistoriaCreateView(LoginRequiredMixin, RecepcionistaRequiredMixin, CreateView):
+class HistoriaCreateView(LoginRequiredMixin, VeterinarioRequiredMixin, CreateView):
     login_url = 'login'
     model = Historias
     form_class = HistoriasForm
@@ -394,7 +394,7 @@ class HistoriaCreateView(LoginRequiredMixin, RecepcionistaRequiredMixin, CreateV
         return super().form_invalid(form)
 
 
-class HistoriaUpdateView(LoginRequiredMixin, RecepcionistaRequiredMixin, UpdateView):
+class HistoriaUpdateView(LoginRequiredMixin, VeterinarioRequiredMixin, UpdateView):
     login_url = 'login'
     model = Historias
     form_class = HistoriasForm
@@ -406,7 +406,7 @@ class HistoriaUpdateView(LoginRequiredMixin, RecepcionistaRequiredMixin, UpdateV
         return super().form_valid(form)
 
 
-class HistoriaDeleteView(LoginRequiredMixin, RecepcionistaRequiredMixin, DeleteView):
+class HistoriaDeleteView(LoginRequiredMixin, VeterinarioRequiredMixin, DeleteView):
     login_url = 'login'
     model = Historias
     template_name = 'historias/historia_delete.html'

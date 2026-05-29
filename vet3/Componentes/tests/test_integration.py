@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from Componentes.models import Duenos, Especialidades, Doctores, Raza, Mascotas, Historias, Citas
+from vet3.Componentes.models import Duenos, Especialidades, Doctores, Raza, Mascotas, Historias, Citas
 
 Usuario = get_user_model()
 

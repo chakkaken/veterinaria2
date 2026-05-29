@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
-from Componentes.models import Duenos, Especialidades, Doctores, Raza, Mascotas, Historias, Citas
-from Componentes.forms import (
+from vet3.Componentes.models import Duenos, Especialidades, Doctores, Raza, Mascotas, Historias, Citas
+from vet3.Componentes.forms import (
     DuenosForm, UsuarioCreationForm, DoctoresForm,
     HistoriasForm, CitasForm, MascotasForm, RazaForm
 )
