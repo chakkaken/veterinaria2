@@ -100,10 +100,20 @@ WSGI_APPLICATION = 'vet3.vet3.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=False)
-    
-}
+DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
+if os.getenv('DJANGO_USE_SQLITE', '').strip() or not DATABASE_URL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=False)
+    }
+    import warnings
+    warnings.filterwarnings('ignore', category=UnicodeWarning)
 
 
 # Password validation
@@ -151,7 +161,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
