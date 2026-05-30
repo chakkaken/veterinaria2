@@ -10,6 +10,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelTable(
             name='usuario',
-            table='Componentes_usuario',
+            table='componentes_usuario',
         ),
     ]
