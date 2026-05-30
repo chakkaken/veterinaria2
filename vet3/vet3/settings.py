@@ -113,7 +113,7 @@ else:
     # Allow forcing SSL requirement via environment variable when needed by the provider
     DB_SSL_REQUIRE = os.getenv('DATABASE_SSL_REQUIRE', os.getenv('DJANGO_DB_SSL_REQUIRE', 'False')).lower() in ('1', 'true', 'yes')
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=DB_SSL_REQUIRE)
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=0, ssl_require=DB_SSL_REQUIRE)
     }
     import warnings
     warnings.filterwarnings('ignore', category=UnicodeWarning)
