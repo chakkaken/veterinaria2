@@ -33,7 +33,7 @@ services:
         value: "False"
 
 databases:
-  - name: veterinaria-db
+  - name: db_veterinaria
     region: oregon
     plan: free
     ipAllowList: []
