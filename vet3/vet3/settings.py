@@ -109,8 +109,10 @@ if os.getenv('DJANGO_USE_SQLITE', '').strip() or not DATABASE_URL:
         }
     }
 else:
+    # Allow forcing SSL requirement via environment variable when needed by the provider
+    DB_SSL_REQUIRE = os.getenv('DATABASE_SSL_REQUIRE', os.getenv('DJANGO_DB_SSL_REQUIRE', 'False')).lower() in ('1', 'true', 'yes')
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=False)
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=DB_SSL_REQUIRE)
     }
     import warnings
     warnings.filterwarnings('ignore', category=UnicodeWarning)
@@ -177,7 +179,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 # ─── Configuración de Correo Electrónico ───────────────────────────────────
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'kelvinjn33@gmail.com')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@veterinaria.example')
 
 # Usar SendGrid si está configurado (recomendado para Render)
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', '')

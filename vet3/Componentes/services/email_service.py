@@ -1,7 +1,10 @@
+import logging
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
+
+logger = logging.getLogger(__name__)
 
 
 class EmailNotificationService:
@@ -28,13 +31,7 @@ Por favor llegue 10 minutos antes de la hora programada.
 Saludos,
 Equipo VetSystem
 """
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[cita.dueno.Correo],
-            fail_silently=True,
-        )
+        EmailNotificationService._safe_send_mail(subject, message, [cita.dueno.Correo], fail_silently=True)
 
     @staticmethod
     def enviar_cambio_estado_cita(cita, estado_anterior):
@@ -61,13 +58,7 @@ Detalles de la cita:
 Saludos,
 Equipo VetSystem
 """
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[cita.dueno.Correo],
-            fail_silently=True,
-        )
+        EmailNotificationService._safe_send_mail(subject, message, [cita.dueno.Correo], fail_silently=True)
 
     @staticmethod
     def enviar_recordatorio_cita(cita):
@@ -88,13 +79,7 @@ Por favor confirme su asistencia respondiendo a este email.
 Saludos,
 Equipo VetSystem
 """
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[cita.dueno.Correo],
-            fail_silently=True,
-        )
+        EmailNotificationService._safe_send_mail(subject, message, [cita.dueno.Correo], fail_silently=True)
 
     @staticmethod
     def enviar_verificacion(usuario, token, request):
@@ -119,13 +104,7 @@ Saludos,
 Equipo VetSystem
 """
         if usuario.email:
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[usuario.email],
-                fail_silently=False,
-            )
+            EmailNotificationService._safe_send_mail(subject, message, [usuario.email], fail_silently=False)
 
     @staticmethod
     def enviar_bienvenida(usuario):
@@ -147,10 +126,24 @@ Saludos,
 Equipo VetSystem
 """
         if usuario.email:
+            EmailNotificationService._safe_send_mail(subject, message, [usuario.email], fail_silently=True)
+
+    @staticmethod
+    def _safe_send_mail(subject, message, recipient_list, fail_silently=True):
+        """Internal helper that wraps django.core.mail.send_mail with logging.
+
+        Returns True on success, False on failure.
+        """
+        try:
             send_mail(
                 subject=subject,
                 message=message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[usuario.email],
-                fail_silently=True,
+                recipient_list=recipient_list,
+                fail_silently=fail_silently,
             )
+            logger.info('Email sent to %s: %s', recipient_list, subject)
+            return True
+        except Exception as e:
+            logger.exception('Failed to send email to %s: %s', recipient_list, e)
+            return False
