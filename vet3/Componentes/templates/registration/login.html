@@ -169,6 +169,25 @@
             color: #7b8099;
         }
 
+        .notice-msg {
+            background: rgba(78,205,196,.1);
+            border: 1px solid rgba(78,205,196,.25);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: .83rem;
+            color: #4ecdc4;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notice-msg.danger {
+            background: rgba(255,107,107,.1);
+            border-color: rgba(255,107,107,.25);
+            color: #ff6b6b;
+        }
+
         .btn-back {
             display: inline-flex;
             align-items: center;
@@ -198,6 +217,15 @@
             <h1>VetSystem</h1>
             <p>Sistema de Gestión Veterinaria</p>
         </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="notice-msg {% if message.tags == 'danger' or message.tags == 'error' %}danger{% endif %}">
+                <i class="fa-solid {% if message.tags == 'danger' or message.tags == 'error' %}fa-circle-xmark{% else %}fa-circle-check{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        {% endif %}
 
         {% if form.errors %}
         <div class="error-msg">

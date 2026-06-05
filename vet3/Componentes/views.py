@@ -516,10 +516,6 @@ class UsuarioNuevoCreateView(CreateView):
 
                 token = VerificationToken.objects.create(usuario=self.object)
 
-            link = self.request.build_absolute_uri(
-                reverse('verificar_email', kwargs={'token': token.token})
-            )
-
             email_enviado = False
             try:
                 EmailNotificationService.enviar_verificacion(self.object, token, self.request)
@@ -530,7 +526,6 @@ class UsuarioNuevoCreateView(CreateView):
             logger.info(f'Cuenta creada exitosamente: {self.object.username} ({self.object.email})')
 
             return render(self.request, 'usuarios/usuario_creado.html', {
-                'link': link,
                 'email_enviado': email_enviado,
                 'email': self.object.email,
                 'username': self.object.username,
@@ -559,10 +554,12 @@ class VerificarEmailView(TemplateView):
         try:
             token = VerificationToken.objects.get(token=token_str)
         except VerificationToken.DoesNotExist:
-            return render(request, self.template_name, {'valido': False, 'expirado': False}, status=400)
+            messages.error(request, 'El enlace de verificación no es válido o ya fue utilizado.')
+            return redirect('login')
 
         if token.is_expired:
-            return render(request, self.template_name, {'valido': False, 'expirado': True}, status=400)
+            messages.error(request, 'El enlace de verificación expiró. Solicita un nuevo registro.')
+            return redirect('login')
 
         usuario = token.usuario
         usuario.is_active = True
@@ -571,7 +568,8 @@ class VerificarEmailView(TemplateView):
 
         token.delete()
 
-        return render(request, self.template_name, {'valido': True})
+        messages.success(request, 'Tu correo fue verificado. Ya puedes iniciar sesión.')
+        return redirect('login')
 
 
 # ─── Citas ────────────────────────────────────────────────────────────────────
